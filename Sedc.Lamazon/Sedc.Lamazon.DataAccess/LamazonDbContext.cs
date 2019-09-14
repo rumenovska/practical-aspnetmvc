@@ -49,6 +49,6 @@ namespace Sedc.Lamazon.DataAccess
                 .HasForeignKey(op => op.ProductId);
         }
 
-
+        
     }
 }
