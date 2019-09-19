@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SEDC.Lamazon.Domain.Models;
 using SEDC.Lamazon.Domain.Models.Enums;
@@ -17,6 +18,8 @@ namespace SEDC.Lamazon.DataAccess
         public DbSet<Product> Products { get; set; }
 
         public DbSet<ProductOrder> ProductOrders { get; set; }
+         
+        public DbSet<Invoice> Invoises { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,9 +43,56 @@ namespace SEDC.Lamazon.DataAccess
                 .WithOne(po => po.Product)
                 .HasForeignKey(po => po.ProductId);
 
+            modelBuilder.Entity<Order>()
+                 .HasOne(o => o.Invoice)
+                 .WithOne(i => i.Order)
+                 .HasForeignKey<Invoice>(i => i.OrderId);
+
+
 
             //Data Seed
-            
+
+            // SEED THE SUPPLIER ACCOUNT AND ROLES
+            // NEW SUPPLIER ID ( ADMIN USER )
+            string supplierId = Guid.NewGuid().ToString();
+            // ADMIN ROLE ID
+            string roleId = Guid.NewGuid().ToString();
+            // USER ROLE ID
+            string userRoleId = Guid.NewGuid().ToString();
+            // SEEDING ROLES ONLY IN DB
+            modelBuilder.Entity<IdentityRole>().HasData(
+            new IdentityRole
+            {
+                Id = roleId,
+                Name = "admin",
+                NormalizedName = "ADMIN"
+            },
+            new IdentityRole
+            {
+                Id = userRoleId,
+                Name = "user",
+                NormalizedName = "USER"
+            });
+
+            var hasher = new PasswordHasher<User>();
+            // SEEDING ADMIN USER WITHOUT ROLE
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = supplierId,
+                UserName = "supplier",
+                NormalizedUserName = "SUPPLIER",
+                Email = "supplier@mail.com",
+                NormalizedEmail = "supplier@mail.com",
+                EmailConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "123456Admin#"),
+                SecurityStamp = string.Empty
+            });
+            // ADD CONNECTION BETWEEN SUPPLIER ROLE AND SUPPLIER USER TO HAVE ADMIN RIGHTS
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = roleId,
+                UserId = supplierId
+            });
 
             modelBuilder.Entity<Product>().HasData(
                 new Product() { Id = 1, Name = "Samsung A40", Price = 200, Description = "Very good phone. Bad batery", Category = CategoryType.Electronics },

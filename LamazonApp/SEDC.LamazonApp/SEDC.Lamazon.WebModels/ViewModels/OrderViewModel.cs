@@ -10,8 +10,9 @@ namespace SEDC.Lamazon.WebModels.ViewModels
     {
         public int Id { get; set; }
         public StatusTypeViewModel Status { get; set; }
-        public double Price => Products.Sum(p => p.Ptice);
+        public double Price => Products.Sum(p => p.Price);
         public UserViewModel User { get; set; }
+        public InvoiceViewModel Invoice { get; set; }
         public IEnumerable<ProductViewModel> Products { get; set; }
         
     }
