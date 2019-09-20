@@ -14,6 +14,6 @@ namespace SEDC.Lamazon.WebModels.ViewModels
         public UserViewModel User { get; set; }
         public InvoiceViewModel Invoice { get; set; }
         public IEnumerable<ProductViewModel> Products { get; set; }
-        
+ 
     }
 }

@@ -47,11 +47,25 @@ namespace SEDC.Lamazon.Services.Services
 
         public int ChangeStatus(int orderId, StatusTypeViewModel status)
         {
-            throw new NotImplementedException();
+            OrderViewModel orderViewModel = GetOrderById(orderId);
+            orderViewModel.Status = status;
+
+            Order mappedOrder = _mapper.Map<Order>(orderViewModel);
+
+            return _orderRepo.Update(mappedOrder);
         }
 
         public int AddProduct(int orderId, int productId)
         {
+            //Product product = _productRepo.GetById(productId);
+            //ProductViewModel productViewModel = _mapper.Map<ProductViewModel>(product);
+
+            //OrderViewModel orderViewModel = GetOrderById(orderId);
+            //orderViewModel.Products.Add(orderViewModel);
+
+            //Order mappedOrder = _mapper.Map<Order>(orderViewModel);
+
+            //return _orderRepo.Update(mappedOrder);
             throw new NotImplementedException();
         }
 
