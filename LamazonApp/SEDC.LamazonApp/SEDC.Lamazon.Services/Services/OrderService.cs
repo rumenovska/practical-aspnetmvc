@@ -6,6 +6,7 @@ using SEDC.Lamazon.WebModels.Enums;
 using SEDC.Lamazon.WebModels.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SEDC.Lamazon.Services.Services
@@ -72,6 +73,22 @@ namespace SEDC.Lamazon.Services.Services
         public int RemoveProduct(int orderId, int productId)
         {
             throw new NotImplementedException();
+        }
+
+        public OrderViewModel GetCurrentOrder(string userId)
+        {
+            Order order = _orderRepo.GetAll()
+                .Where(x => x.UserId == userId)
+                .LastOrDefault();
+
+            IEnumerable<Product> products = order.ProductOrders
+                .Select(x => _productRepo.GetById(x.ProductId));
+
+            OrderViewModel orderModel = _mapper.Map<OrderViewModel>(order);
+
+            orderModel.Products = _mapper.Map<List<ProductViewModel>>(products);
+
+            return orderModel;
         }
     }
 }

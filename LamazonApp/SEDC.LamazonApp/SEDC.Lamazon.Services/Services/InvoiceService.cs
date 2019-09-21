@@ -23,7 +23,7 @@ namespace SEDC.Lamazon.Services.Services
         }
         public InvoiceViewModel GetOrderById(int id)
         {
-            return _mapper.Map<InvoiceViewModel>(_invoiceRepo.GetById(id);
+            return _mapper.Map<InvoiceViewModel>(_invoiceRepo.GetById(id));
         }
 
         public int CreateOrder(InvoiceViewModel invoice, int orderId)
