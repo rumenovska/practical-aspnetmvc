@@ -10,9 +10,10 @@ namespace SEDC.Lamazon.Services.Interfaces
     {
         IEnumerable<OrderViewModel> GetAllOrders();
         OrderViewModel GetOrderById(int id);
+        OrderViewModel GetOrderById(int orderId, string userId);
         int CreateOrder(OrderViewModel order, string userId);
-        int ChangeStatus(int orderId, StatusTypeViewModel status);
-        int AddProduct(int orderId, int productId);
+        int ChangeStatus(int orderId,string userId, StatusTypeViewModel status);
+        int AddProduct(int orderId, int productId, string userId);
         int RemoveProduct(int orderId, int productId);
         OrderViewModel GetCurrentOrder(string userId);
     }

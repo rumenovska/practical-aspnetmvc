@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SEDC.Lamazon.DataAccess;
 using SEDC.Lamazon.Services.Helpers;
+using SEDC.Lamazon.Services.Interfaces;
+using SEDC.Lamazon.Services.Services;
 
 namespace SEDC.Lazamazon.Web
 {
@@ -42,6 +44,20 @@ namespace SEDC.Lazamazon.Web
             var appSettings = appConfig.Get<AppSettings>();
 
             DIModule.RegisterModule(services, appSettings.LamazonDbConnectionString);
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/User/Login";
+                options.AccessDeniedPath= "/User/Login";
+                options.SlidingExpiration = true;
+            });
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IInvoiceService, InvoiceService>();
 
             services.AddAutoMapper();
 

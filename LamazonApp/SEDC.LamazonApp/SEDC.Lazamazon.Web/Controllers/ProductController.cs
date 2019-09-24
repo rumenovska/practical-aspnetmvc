@@ -16,7 +16,7 @@ namespace SEDC.Lazamazon.Web.Controllers
             _productService = productService;
         }
 
-        [Authorize(Roles = "user")]
+        //[Authorize(Roles = "user")]
         public IActionResult Products()
         {
           return View(_productService.GetAllProducts().ToList());

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SEDC.Lamazon.DataAccess.Interfaces;
 using SEDC.Lamazon.Domain.Models;
+using SEDC.Lamazon.Domain.Models.Enums;
 using SEDC.Lamazon.Services.Interfaces;
 using SEDC.Lamazon.WebModels.Enums;
 using SEDC.Lamazon.WebModels.ViewModels;
@@ -30,10 +31,15 @@ namespace SEDC.Lamazon.Services.Services
         {
             return _mapper.Map<List<OrderViewModel>>(_orderRepo.GetAll());
         }
-
+        
         public OrderViewModel GetOrderById(int id)
         {
             return _mapper.Map<OrderViewModel>(_orderRepo.GetById(id));
+        }
+        public OrderViewModel GetOrderById(int orderId,string userId)
+        {
+            User user = _userRepo.GetById(userId);
+            return _mapper.Map<OrderViewModel>(_orderRepo.GetById(orderId));
         }
 
         public int CreateOrder(OrderViewModel order, string userId)
@@ -46,28 +52,38 @@ namespace SEDC.Lamazon.Services.Services
             return _orderRepo.Insert(mappedOrder);
         }
 
-        public int ChangeStatus(int orderId, StatusTypeViewModel status)
+        public int ChangeStatus(int orderId,string userId, StatusTypeViewModel status)
         {
-            OrderViewModel orderViewModel = GetOrderById(orderId);
-            orderViewModel.Status = status;
+            Order order = _orderRepo.GetById(orderId);
+            User user = _userRepo.GetById(userId);
 
-            Order mappedOrder = _mapper.Map<Order>(orderViewModel);
+            order.Status = (StatusType)status;
 
-            return _orderRepo.Update(mappedOrder);
+            if(status == StatusTypeViewModel.Processing)
+            {
+                _orderRepo.Insert(new Order() {
+                    User = user,
+                    Status = StatusType.Init
+                });
+            }
+
+            return _orderRepo.Update(order);
         }
 
-        public int AddProduct(int orderId, int productId)
+        public int AddProduct(int orderId, int productId, string userId)
         {
-            //Product product = _productRepo.GetById(productId);
-            //ProductViewModel productViewModel = _mapper.Map<ProductViewModel>(product);
+            Product product = _productRepo.GetById(productId);
+            Order order = _orderRepo.GetById(orderId);
 
-            //OrderViewModel orderViewModel = GetOrderById(orderId);
-            //orderViewModel.Products.Add(orderViewModel);
+            User user = _userRepo.GetById(userId);
+            order.ProductOrders.ToList().Add(new ProductOrder()
+            {
+                Product = product,
+                Order = order
+            });
 
-            //Order mappedOrder = _mapper.Map<Order>(orderViewModel);
-
-            //return _orderRepo.Update(mappedOrder);
-            throw new NotImplementedException();
+            order.User = user;
+            return _orderRepo.Update(order);
         }
 
         public int RemoveProduct(int orderId, int productId)
