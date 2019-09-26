@@ -25,12 +25,15 @@ namespace SEDC.Lazamazon.Web.Controllers
         public IActionResult Login(LoginViewModel model)
         {
             _userSrvice.Login(model);
+            if (User.IsInRole("admin"))
+            {
+                return RedirectToAction("listallorders", "order");
+            }
             return RedirectToAction("products", "product");
         }
 
         public IActionResult Register()
         {
-
             return View(new RegisterViewModel());
         }
 

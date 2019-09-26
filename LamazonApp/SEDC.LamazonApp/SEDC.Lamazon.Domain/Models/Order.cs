@@ -27,6 +27,6 @@ namespace SEDC.Lamazon.Domain.Models
 
         public virtual Invoice Invoice { get; set; }
 
-        public virtual IEnumerable<ProductOrder> ProductOrders { get; set; }
+        public virtual List<ProductOrder> ProductOrders { get; set; }
     }
 }

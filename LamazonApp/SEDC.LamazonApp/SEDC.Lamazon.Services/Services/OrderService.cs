@@ -76,7 +76,7 @@ namespace SEDC.Lamazon.Services.Services
             Order order = _orderRepo.GetById(orderId);
 
             User user = _userRepo.GetById(userId);
-            order.ProductOrders.ToList().Add(new ProductOrder()
+            order.ProductOrders.Add(new ProductOrder()
             {
                 Product = product,
                 Order = order
