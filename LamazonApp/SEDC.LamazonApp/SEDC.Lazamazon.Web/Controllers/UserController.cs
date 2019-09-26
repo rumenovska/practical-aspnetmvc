@@ -25,11 +25,12 @@ namespace SEDC.Lazamazon.Web.Controllers
         public IActionResult Login(LoginViewModel model)
         {
             _userSrvice.Login(model);
-            return RedirectToAction("index", "product");
+            return RedirectToAction("products", "product");
         }
 
         public IActionResult Register()
         {
+
             return View(new RegisterViewModel());
         }
 
@@ -37,7 +38,7 @@ namespace SEDC.Lazamazon.Web.Controllers
         public IActionResult Register(RegisterViewModel model)
         {
             _userSrvice.Register(model);
-            return RedirectToAction("index", "product");
+            return RedirectToAction("products", "product");
         }
 
         
